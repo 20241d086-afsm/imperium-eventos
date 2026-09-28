@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imperium Eventos & Catering | Producción de Eventos a Domicilio</title>
+    <!-- FontAwesome para Íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet CSS para Mapa Interactivo Gratuito -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --color-guinda: #6b001a;
+            --color-guinda-oscuro: #4a0012;
+            --color-dorado: #d4af37;
+            --color-blanco: #ffffff;
+            --color-texto: #1a1a1a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html { height: 100%; }
+
+        body {
+            min-height: 100%;
+            background-color: #fdfafb;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.90), rgba(245, 238, 241, 0.92)), 
+                              url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1920&q=80');
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            color: var(--color-texto);
+        }
+
+        /* HEADER */
+        header {
+            background-color: var(--color-guinda);
+            color: var(--color-blanco);
+            padding: 0.8rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            color: var(--color-dorado);
+            letter-spacing: 1px;
+        }
+
+        .logo p {
+            font-size: 0.75rem;
+            color: var(--color-blanco);
+        }
+
+        nav a {
+            color: var(--color-blanco);
+            text-decoration: none;
+            margin-left: 1.2rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover { color: var(--color-dorado); }
+
+        .btn-login-nav {
+            background-color: var(--color-dorado);
+            color: #000 !important;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: bold !important;
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(rgba(107, 0, 26, 0.85), rgba(74, 0, 18, 0.9)), 
+                        url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1200&q=80') center/cover;
+            color: var(--color-blanco);
+            text-align: center;
+            padding: 4rem 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            color: var(--color-dorado);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto 1.8rem;
+        }
+
+        .btn-principal {
+            background-color: var(--color-dorado);
+            color: #000;
+            padding: 0.8rem 1.8rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s, background-color 0.3s;
+            display: inline-block;
+        }
+
+        .btn-principal:hover {
+            transform: scale(1.04);
+            background-color: #f1c40f;
+        }
+
+        /* SECCIONES */
+        .container {
+            max-width: 1100px;
+            margin: 2.5rem auto;
+            padding: 0 1rem;
+        }
+
+        .titulo-seccion {
+            text-align: center;
+            color: var(--color-guinda);
+            font-size: 1.8rem;
+            margin-bottom: 1.8rem;
+            position: relative;
+            background: rgba(255, 255, 255, 0.85);
+            display: table;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0.4rem 1.2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .titulo-seccion::after {
+            content: '';
+            width: 60px;
+            height: 3px;
+            background-color: var(--color-dorado);
+            display: block;
+            margin: 0.4rem auto 0;
+        }
+
+        /* PANEL DE PROMOCIÓN */
+        .promo-banner {
+            background: linear-gradient(135deg, var(--color-guinda) 0%, var(--color-guinda-oscuro) 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 3px solid var(--color-dorado);
+            box-shadow: 0 8px 25px rgba(107, 0, 26, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .promo-info h3 { color: var(--color-dorado); font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .promo-info p { font-size: 1.05rem; margin-bottom: 0.5rem; }
+
+        .promo-tag {
+            background-color: #e74c3c;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 0.8rem;
+        }
+
+        .promo-precio {
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            padding: 1.2rem 2rem;
+            border-radius: 12px;
+            border: 1px dashed var(--color-dorado);
+        }
+
+        .promo-precio .antes { text-decoration: line-through; opacity: 0.7; font-size: 1rem; }
+        .promo-precio .ahora { font-size: 2.2rem; color: var(--color-dorado); font-weight: bold; display: block; }
+
+        /* TARJETAS */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-top: 4px solid var(--color-guinda);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(107, 0, 26, 0.2);
+            border-top-color: var(--color-dorado);
+        }
+
+        .card-body { padding: 1.2rem; text-align: center; }
+        .card-body i { font-size: 2.2rem; color: var(--color-guinda); margin-bottom: 0.6rem; }
+        .card-body h3 { color: var(--color-guinda); font-size: 1.15rem; margin-bottom: 0.4rem; }
+        .card-body p { font-size: 0.9rem; color: #555; margin-bottom: 0.8rem; }
+
+        .click-badge-small {
+            display: inline-block;
+            font-size: 0.75rem;
+            color: var(--color-guinda);
+            font-weight: bold;
+            background: #fcf0f2;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            border: 1px solid var(--color-guinda);
+        }
+
+        /* COTIZADOR */
+        .cotizador {
+            background: rgba(255, 255, 255, 0.96);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            border: 2px solid var(--color-guinda);
+        }
+
+        .form-group { margin-bottom: 1rem; }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+            color: var(--color-guinda);
+            font-size: 0.92rem;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            background: #fff;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media(max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        #map {
+            height: 220px;
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            border: 2px solid var(--color-guinda);
+            z-index: 1;
+        }
+
+        .btn-reserva {
+            width: 100%;
+            background-color: #25d366;
+            color: white;
+            font-size: 1.1rem;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .btn-reserva:hover { background-color: #1eb954; }
+
+        /* MODALES */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.75);
+            backdrop-filter: blur(3px);
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border: 3px solid var(--color-guinda);
+            margin: 20px auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--color-guinda);
+            cursor: pointer;
+        }
+
+        .modal-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+        }
+
+        .modal-title { color: var(--color-guinda); font-size: 1.4rem; margin-bottom: 0.4rem; }
+        .modal-desc { font-size: 0.9rem; line-height: 1.4; color: #444; margin-bottom: 0.8rem; }
+
+        .modal-precio {
+            font-size: 1.2rem;
+            color: var(--color-guinda);
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+            display: block;
+            background: #fdf0f2;
+            padding: 0.5rem;
+            border-radius: 6px;
+            border-left: 4px solid var(--color-dorado);
+        }
+
+        .modal-badge {
+            background-color: var(--color-dorado);
+            color: #000;
+            font-weight: bold;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            display: inline-block;
+            font-size: 0.85rem;
+        }
+
+        /* PASARELA DE PAGO */
+        .resumen-pago {
+            background: #fcf0f2;
+            border: 1px solid var(--color-guinda);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .resumen-pago p {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.4rem;
+            font-size: 0.95rem;
+        }
+
+        .opcion-pago-tab {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .btn-tab {
+            flex: 1;
+            padding: 0.6rem;
+            border: 2px solid var(--color-guinda);
+            background: white;
+            color: var(--color-guinda);
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn-tab.active {
+            background: var(--color-guinda);
+            color: white;
+        }
+
+        .qr-box {
+            text-align: center;
+            background: #f9f9f9;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px dashed #ccc;
+            margin-bottom: 1rem;
+        }
+
+        .qr-box img {
+            width: 160px;
+            height: 160px;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        /* CHATBOT */
+        .chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+        .chat-btn {
+            background-color: var(--color-guinda);
+            color: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 2px solid var(--color-dorado);
+        }
+
+        .chat-box {
+            display: none;
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 310px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+
+        .chat-header {
+            background-color: var(--color-guinda);
+            color: white;
+            padding: 0.8rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        .chat-body { height: 230px; padding: 0.8rem; overflow-y: auto; font-size: 0.85rem; background-color: #f8f9fa; }
+        .msg { margin-bottom: 0.7rem; padding: 0.5rem 0.8rem; border-radius: 8px; max-width: 85%; }
+        .msg-bot { background: #e9ecef; color: #333; }
+        .msg-user { background: var(--color-guinda); color: white; margin-left: auto; }
+        .chat-input { display: flex; border-top: 1px solid #ddd; }
+        .chat-input input { flex: 1; padding: 0.5rem; border: none; outline: none; }
+        .chat-input button { background: var(--color-guinda); color: white; border: none; padding: 0 0.8rem; cursor: pointer; }
+
+        footer {
+            background-color: var(--color-guinda-oscuro);
+            color: white;
+            text-align: center;
+            padding: 1.2rem;
+            margin-top: 3rem;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">
+            <h1>IMPERIUM</h1>
+            <p>Eventos & Catering Perú</p>
+        </div>
+        <nav>
+            <a href="#promocion">Promociones</a>
+            <a href="#servicios">Servicios</a>
+            <a href="#menu">Platos Típicos</a>
+            <a href="#cotizar">Cotizar Evento</a>
+            <a href="javascript:void(0)" onclick="abrirLogin()" class="btn-login-nav"><i class="fa-solid fa-user-lock"></i> Acceso Encargado</a>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h2>Organizamos tu Evento Soñado a Domicilio</h2>
+        <p>Llevamos el mejor espectáculo, animación, sonido, luces, seguridad y gastronomía peruana directamente a tu vivienda o local elegido.</p>
+        <a href="#cotizar" class="btn-principal"><i class="fa-solid fa-calendar-check"></i> Cotizar y Reservar Ahora</a>
+    </section>
+
+    <!-- SECCIÓN PROMOCIÓN DESTACADA -->
+    <section class="container" id="promocion">
+        <div class="promo-banner">
+            <div class="promo-info">
+                <span class="promo-tag"><i class="fa-solid fa-fire"></i> ¡OFERTA LIMITADA DE TEMPORADA!</span>
+                <h3>Paquete Promocional "IMPERIUM ALL-INCLUSIVE"</h3>
+                <p><strong>Incluye por 5 horas completas de servicio a domicilio:</strong></p>
+                <p>• 1 Animador Profesional + 1 Cantante en vivo</p>
+                <p>• Equipo de Sonido Pro 1500W + Luces Robóticas</p>
+                <p>• 2 Agentes de Seguridad Privada</p>
+                <p>• 50 Platos de Catering Tradicional (Chiriuchu, Lechón o Pollo)</p>
+            </div>
+            <div class="promo-precio">
+                <span class="antes">Precio Regular: S/ 3,500</span>
+                <span class="ahora">S/ 2,499</span>
+                <a href="#cotizar" class="btn-principal" style="margin-top:0.8rem; font-size:0.9rem;" onclick="aplicarPromo()">
+                    <i class="fa-solid fa-bolt"></i> Aplicar esta Promoción
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICIOS -->
+    <section class="container" id="servicios">
+        <h2 class="titulo-seccion">Nuestros Servicios (Clic para ver precios)</h2>
+        <div class="grid-3">
+
+            <div class="card" onclick="verDetalle('animador')">
+                <div class="card-body">
+                    <i class="fa-solid fa-microphone-lines"></i>
+                    <h3>Animadores & Cantantes</h3>
+                    <p>Animadores profesionales y cantantes en vivo.</p>
+                    <span class="click-badge-small"><i class="fa-solid fa-tag"></i> Ver Precio</span>
+                </div>
+            </div>
+
+            <div class="card" onclick="verDetalle('marco')">
+                <div class="card-body">
+                    <i class="fa-solid fa-guitar"></i>
+                    <h3>Marco Musical & Show</h3>
+                    <p>Mariachis, arpa y orquestas en vivo.</p>
+                    <span class="click-badge-small"><i class="fa-solid fa-tag"></i> Ver Precio</span>
+                </div>
+            </div>
+
+            <div class="card" onclick="verDetalle('luces')">
+                <div class="card-body">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    <h3>Luces y Sonido Pro</h3>
+                    <p>Equipos de sonido pro e iluminación robótica.</p>
+                    <span class="click-badge-small"><i class="fa-solid fa-tag"></i> Ver Precio</span>
+                </div>
+            </div>
+
+            <div class="card" onclick="verDetalle('seguridad')">
+                <div class="card-body">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <h3>Seguridad Privada</h3>
+                    <p>Agentes uniformados para tranquilidad del evento.</p>
+                    <span class="click-badge-small"><i class="fa-solid fa-tag"></i> Ver Precio</span>
+                </div>
+            </div>
+
+            <div class="card" onclick="verDetalle('catering')">
+                <div class="card-body">
+                    <i class="fa-solid fa-utensils"></i>
+                    <h3>Servicio de Catering</h3>
+                    <p>Mozos, loza fina y banquetería completa.</p>
+                    <span class="click-badge-small"><i class="fa-solid fa-tag"></i> Ver Precio</span>
+                </div>
+            </div>
+
+            <div class="card" onclick="verDetalle('domicilio')">
+                <div class="card-body">
+                    <i class="fa-solid fa-house-chimney"></i>
+                    <h3>Montaje a Domicilio</h3>
+                    <p>Instalación en la dirección que indiques.</p>
+                    <span class="click-badge-small"><i class="fa-solid fa-tag"></i> Ver Precio</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- MENÚ GASTRONÓMICO -->
+    <section class="container" id="menu">
+        <h2 class="titulo-seccion">Platos Típicos Tradicionales</h2>
+        <div class="grid-3">
+
+            <div class="card" onclick="verDetalle('chiriuchu')">
+                <div class="card-body">
+                    <i class="fa-solid fa-plate-wheat"></i>
+                    <h3>Chiriuchu Tradicional</h3>
+                    <p>Plato bandera cusqueño completo.</p>
+                    <span class="click-badge-small"><i class="fa-solid fa-tag"></i> Ver Precio</span>
+                </div>
+            </div>
+
+            <div class="card" onclick="verDetalle('lechon')">
+                <div class="card-body">
+                    <i class="fa-solid fa-drumstick-bite"></i>
+                    <h3>Lechón al Horno</h3>
+                    <p>Servido con tamal cusqueño y moraya.</p>
+                    <span class="click-badge-small"><i class="fa-solid fa-tag"></i> Ver Precio</span>
+                </div>
+            </div>
+
+            <div class="card" onclick="verDetalle('pollo')">
+                <div class="card-body">
+                    <i class="fa-solid fa-bowl-food"></i>
+                    <h3>Pollo al Horno con Tallarín</h3>
+                    <p>Presa al horno con tallarines y papa dorada.</p>
+                    <span class="click-badge-small"><i class="fa-solid fa-tag"></i> Ver Precio</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FORMULARIO DE COTIZACIÓN PARA EL CLIENTE -->
+    <section class="container" id="cotizar">
+        <h2 class="titulo-seccion">Reserva, Cotiza y Recibe tu Voucher</h2>
+        <div class="cotizador">
+            <form id="formEvento">
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Nombre Completo:</label>
+                        <input type="text" id="nombre" required placeholder="Ej. Juan Pérez">
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono / WhatsApp:</label>
+                        <input type="tel" id="telefono" required placeholder="Ej. 987654321">
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Correo Electrónico:</label>
+                        <input type="email" id="correo" required placeholder="ejemplo@correo.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Evento:</label>
+                        <select id="tipoEvento" required>
+                            <option value="Cumpleaños">Cumpleaños</option>
+                            <option value="Boda / Matrimonio">Boda / Matrimonio</option>
+                            <option value="Cargo Patronal">Cargo Patronal</option>
+                            <option value="15 Años">15 Años</option>
+                            <option value="Bautizo">Bautizo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Fecha del Evento:</label>
+                        <input type="date" id="fechaEvento" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Animadores Requeridos:</label>
+                        <select id="animadorReq">
+                            <option value="1 Animador Principal">1 Animador Principal (S/ 250)</option>
+                            <option value="2 Animadores (Show Dinámico)">2 Animadores (S/ 450)</option>
+                            <option value="Sin Animador">Sin Animador (S/ 0)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Cantidad de Cantantes:</label>
+                        <input type="number" id="cantantes" min="0" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Seguridad Privada (Agentes):</label>
+                        <input type="number" id="seguridad" min="0" value="2">
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Plato de Catering:</label>
+                        <select id="platoElegido">
+                            <option value="Chiriuchu Tradicional">Chiriuchu Tradicional (S/ 35 porción)</option>
+                            <option value="Lechón al Horno">Lechón al Horno (S/ 30 porción)</option>
+                            <option value="Pollo al Horno con Tallarín">Pollo al Horno con Tallarín (S/ 22 porción)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Cantidad de Platos:</label>
+                        <input type="number" id="cantPlatos" min="10" value="50">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Bebidas y Adicionales Requeridos:</label>
+                    <input type="text" id="bebidas" placeholder="Ej. 2 Cajas de Cerveza, Vino de Honor...">
+                </div>
+
+                <!-- MAPA DE UBICACIÓN -->
+                <div class="form-group">
+                    <label>Ubicación / Dirección Exacta (Arrastra el punto en el mapa):</label>
+                    <input type="text" id="ubicacion" required placeholder="Ej. Av. El Sol 456, Cusco">
+                    <input type="hidden" id="coordsUbicacion" value="">
+                    <div id="map"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Modalidad de Pago:</label>
+                    <select id="modalidadPagoSel">
+                        <option value="50%">Adelanto del 50% para Garantizar Reserva</option>
+                        <option value="100%">Pago Completo del 100% del Evento</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-reserva">
+                    <i class="fa-solid fa-credit-card"></i> Continuar al Pago (Yape / Tarjeta)
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- MODAL PASARELA DE PAGO INTERACTIVA -->
+    <div class="modal" id="modalPasarelaPago">
+        <div class="modal-content" style="max-width: 480px;">
+            <span class="close-modal" onclick="cerrarPasarela()">&times;</span>
+            <h3 class="modal-title" style="text-align: center;"><i class="fa-solid fa-cash-register"></i> Pasarela de Pago</h3>
+
+            <div class="resumen-pago">
+                <p><span>Costo Total Estimado:</span> <strong id="montoTotalTxt">S/ 0.00</strong></p>
+                <p><span>Modalidad Seleccionada:</span> <span id="modalidadTxt">Adelanto 50%</span></p>
+                <p style="font-size:1.1rem; color:var(--color-guinda); margin-top:0.3rem; border-top:1px solid #ddd; padding-top:0.3rem;">
+                    <span>Monto a Pagar Ahora:</span> <strong id="montoPagarTxt" style="color:#27ae60;">S/ 0.00</strong>
+                </p>
+            </div>
+
+            <div class="opcion-pago-tab">
+                <div class="btn-tab active" id="tabYape" onclick="seleccionarMetodo('Yape')">
+                    <i class="fa-solid fa-qrcode"></i> Yape / Plin
+                </div>
+                <div class="btn-tab" id="tabTarjeta" onclick="seleccionarMetodo('Tarjeta')">
+                    <i class="fa-solid fa-credit-card"></i> Tarjeta
+                </div>
+            </div>
+
+            <!-- BLOQUE DE PAGO YAPE / PLIN -->
+            <div id="bloqueYape">
+                <div class="qr-box">
+                    <p style="font-size:0.85rem; font-weight:bold; color:var(--color-guinda);">Escanea el QR de YAPE o PLIN:</p>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=IMPERIUM_EVENTOS_PAGO_987654321" alt="QR Yape Imperium">
+                    <p style="font-size:0.85rem; color:#333;">Titular: <strong>Imperium Eventos & Catering S.A.C.</strong></p>
+                    <p style="font-size:0.85rem; color:#333;">Número Yape: <strong>987 654 321</strong></p>
+                </div>
+                <form onsubmit="procesarPagoYape(event)">
+                    <div class="form-group">
+                        <label>Código o N° de Operación del Yape/Plin:</label>
+                        <input type="text" id="numOperacionYape" required placeholder="Ej. 849201">
+                    </div>
+                    <button type="submit" class="btn-principal" style="width:100%; background-color:#27ae60; color:white;">
+                        <i class="fa-solid fa-circle-check"></i> Confirmar Pago y Descargar Voucher
+                    </button>
+                </form>
+            </div>
+
+            <!-- BLOQUE DE PAGO CON TARJETA -->
+            <div id="bloqueTarjeta" style="display:none;">
+                <form onsubmit="procesarPagoTarjeta(event)">
+                    <div class="form-group">
+                        <label>Nombre del Titular de la Tarjeta:</label>
+                        <input type="text" id="cardName" required placeholder="Ej. Juan Pérez">
+                    </div>
+                    <div class="form-group">
+                        <label>Número de Tarjeta:</label>
+                        <input type="text" id="cardNumber" maxlength="16" required placeholder="4557 •••• •••• 1234">
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Vencimiento:</label>
+                            <input type="text" id="cardExp" placeholder="MM/AA" required>
+                        </div>
+                        <div class="form-group">
+                            <label>CVV:</label>
+                            <input type="password" id="cardCVV" maxlength="4" required placeholder="123">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-principal" style="width:100%; background-color:#27ae60; color:white;">
+                        <i class="fa-solid fa-lock"></i> Pagar con Tarjeta y Descargar Voucher
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIRMACIÓN DE RESERVA -->
+    <div class="modal" id="modalExitoCorreo">
+        <div class="modal-content" style="max-width: 420px; text-align: center;">
+            <span class="close-modal" onclick="cerrarModalExito()">&times;</span>
+            <i class="fa-solid fa-circle-check" style="font-size: 3.5rem; color: #27ae60; margin-bottom: 0.8rem;"></i>
+            <h3 class="modal-title" style="color: var(--color-guinda);">¡Reserva y Pago Exitosos!</h3>
+            <p style="font-size: 0.95rem; color: #333; margin: 0.8rem 0;">
+                El Voucher Oficial PDF con código <strong id="voucherCodigoTxt">IMP-000000</strong> se ha generado correctamente y se ha notificado al encargado por WhatsApp.
+            </p>
+            <p style="font-size: 0.82rem; color: #666; margin-top: 0.8rem;">
+                Se ha descargado el comprobante de reserva en tu dispositivo.
+            </p>
+            <button onclick="cerrarModalExito()" class="btn-principal" style="margin-top: 1rem; width: 100%;">
+                Entendido
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL DE PRECIOS Y DETALLES -->
+    <div class="modal" id="modalDetalle">
+        <div class="modal-content">
+            <span class="close-modal" onclick="cerrarModal()">&times;</span>
+            <img src="" alt="Servicio" class="modal-img" id="modalImg">
+            <h3 class="modal-title" id="modalTitle">Título Servicio</h3>
+            <span class="modal-precio" id="modalPrecio">Precio: S/ 0.00</span>
+            <p class="modal-desc" id="modalDesc">Descripción...</p>
+            <span class="modal-badge" id="modalBadge">Disponible</span>
+        </div>
+    </div>
+
+    <!-- MODAL DE INICIO DE SESIÓN PARA EL ENCARGADO / ADMINISTRADOR -->
+    <div class="modal" id="modalLogin">
+        <div class="modal-content" style="max-width: 400px;">
+            <span class="close-modal" onclick="cerrarLogin()">&times;</span>
+            <h3 class="modal-title" style="text-align: center;"><i class="fa-solid fa-user-gear"></i> Acceso Encargado</h3>
+            <p style="text-align: center; font-size: 0.85rem; color:#666; margin-bottom:1rem;">Ingrese sus credenciales de administrador para ver las reservas.</p>
+
+            <form id="formAdminLogin">
+                <div class="form-group">
+                    <label>Usuario / Correo Admin:</label>
+                    <input type="text" id="adminUser" required placeholder="admin@imperium.com">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña:</label>
+                    <input type="password" id="adminPass" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-principal" style="width:100%; margin-top:1rem;">
+                    <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
+                </button>
+            </form>
+            <p id="msgErrorLogin" style="color:red; text-align:center; font-size:0.85rem; margin-top:0.8rem; display:none;">Credenciales incorrectas.</p>
+        </div>
+    </div>
+
+    <!-- CHATBOT -->
+    <div class="chat-widget">
+        <div class="chat-btn" onclick="toggleChat()"><i class="fa-solid fa-robot"></i></div>
+        <div class="chat-box" id="chatBox">
+            <div class="chat-header">
+                <span>Asistente Virtual Imperium</span>
+                <span style="cursor:pointer" onclick="toggleChat()">×</span>
+            </div>
+            <div class="chat-body" id="chatBody">
+                <div class="msg msg-bot">¡Hola! Soy el asistente con IA. ¿Tienes consultas sobre precios, vouchers o la oferta promocional?</div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="userInput" placeholder="Escribe tu consulta...">
+                <button onclick="enviarMensaje()"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Imperium Eventos & Catering Perú - Sistema Integrado con Gestión de Reservas a Domicilio.</p>
+    </footer>
+
+    <!-- Leaflet JS y jsPDF para voucher PDF -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- SCRIPT DE MANEJO DE LOGIN Y MODALES -->
+    <script>
+        function abrirLogin() {
+            document.getElementById('modalLogin').style.display = 'flex';
+        }
+
+        function cerrarLogin() {
+            document.getElementById('modalLogin').style.display = 'none';
+        }
+
+        function cerrarModalExito() {
+            document.getElementById('modalExitoCorreo').style.display = 'none';
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const formLogin = document.getElementById('formAdminLogin');
+            if (formLogin) {
+                formLogin.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const user = document.getElementById('adminUser').value.trim();
+                    const pass = document.getElementById('adminPass').value.trim();
+
+                    if (user === "admin@imperium.com" && pass === "admin123") {
+                        cerrarLogin();
+                        window.location.href = "vistas/admin.html";
+                    } else {
+                        document.getElementById('msgErrorLogin').style.display = 'block';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
