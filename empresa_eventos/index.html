@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Imperium Eventos & Catering | Producción de Eventos a Domicilio</title>
+    <title>Imperium Eventos & Catering | Producción de Eventos</title>
     <!-- FontAwesome para Íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Leaflet CSS para Mapa Interactivo Gratuito -->
@@ -489,7 +489,7 @@
     <header>
         <div class="logo">
             <h1>IMPERIUM</h1>
-            <p>Eventos & Catering Perú</p>
+            <p>Eventos & Catering Cusco</p>
         </div>
         <nav>
             <a href="#promocion">Promociones</a>
@@ -502,7 +502,7 @@
 
     <!-- HERO -->
     <section class="hero">
-        <h2>Organizamos tu Evento Soñado a Domicilio</h2>
+        <h2>Organizamos tu Evento Soñado </h2>
         <p>Llevamos el mejor espectáculo, animación, sonido, luces, seguridad y gastronomía peruana directamente a tu vivienda o local elegido.</p>
         <a href="#cotizar" class="btn-principal"><i class="fa-solid fa-calendar-check"></i> Cotizar y Reservar Ahora</a>
     </section>
@@ -513,15 +513,15 @@
             <div class="promo-info">
                 <span class="promo-tag"><i class="fa-solid fa-fire"></i> ¡OFERTA LIMITADA DE TEMPORADA!</span>
                 <h3>Paquete Promocional "IMPERIUM ALL-INCLUSIVE"</h3>
-                <p><strong>Incluye por 5 horas completas de servicio a domicilio:</strong></p>
-                <p>• 1 Animador Profesional + 1 Cantante en vivo</p>
+                <p><strong>Incluye por 5 horas completas de servicio:</strong></p>
+                <p>• 1 Animador Profesional + 2 Cantantes en vivo</p>
                 <p>• Equipo de Sonido Pro 1500W + Luces Robóticas</p>
                 <p>• 2 Agentes de Seguridad Privada</p>
                 <p>• 50 Platos de Catering Tradicional (Chiriuchu, Lechón o Pollo)</p>
             </div>
             <div class="promo-precio">
-                <span class="antes">Precio Regular: S/ 3,500</span>
-                <span class="ahora">S/ 2,499</span>
+                <span class="antes">Precio Regular: S/ 2,500</span>
+                <span class="ahora">S/ 1,499</span>
                 <a href="#cotizar" class="btn-principal" style="margin-top:0.8rem; font-size:0.9rem;" onclick="aplicarPromo()">
                     <i class="fa-solid fa-bolt"></i> Aplicar esta Promoción
                 </a>
@@ -556,7 +556,7 @@
                 <div class="card-body">
                     <i class="fa-solid fa-lightbulb"></i>
                     <h3>Luces y Sonido Pro</h3>
-                    <p>Equipos de sonido pro e iluminación robótica.</p>
+                    <p>Equipos de sonido pro e iluminación, humo.</p>
                     <span class="click-badge-small"><i class="fa-solid fa-tag"></i> Ver Precio</span>
                 </div>
             </div>
@@ -566,6 +566,7 @@
                     <i class="fa-solid fa-shield-halved"></i>
                     <h3>Seguridad Privada</h3>
                     <p>Agentes uniformados para tranquilidad del evento.</p>
+                    <p>También contamos con vallas de seguridad</p>
                     <span class="click-badge-small"><i class="fa-solid fa-tag"></i> Ver Precio</span>
                 </div>
             </div>
@@ -703,13 +704,13 @@
 
                 <div class="form-group">
                     <label>Bebidas y Adicionales Requeridos:</label>
-                    <input type="text" id="bebidas" placeholder="Ej. 2 Cajas de Cerveza, Vino de Honor...">
+                    <input type="text" id="bebidasAdicionales" placeholder="Ej. 2 Cajas de Cerveza, Vino de Honor...">
                 </div>
 
                 <!-- MAPA DE UBICACIÓN -->
                 <div class="form-group">
                     <label>Ubicación / Dirección Exacta (Arrastra el punto en el mapa):</label>
-                    <input type="text" id="ubicacion" required placeholder="Ej. Av. El Sol 456, Cusco">
+                    <input type="text" id="direccionUbicacion" placeholder="Ej. Av. El Sol 456, Cusco">
                     <input type="hidden" id="coordsUbicacion" value="">
                     <div id="map"></div>
                 </div>
@@ -874,7 +875,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 Imperium Eventos & Catering Perú - Sistema Integrado con Gestión de Reservas a Domicilio.</p>
+        <p>&copy; 2026 Imperium Eventos & Catering Cusco - Sistema Integrado con Gestión de Reservas.</p>
     </footer>
 
     <!-- Leaflet JS y jsPDF para voucher PDF -->

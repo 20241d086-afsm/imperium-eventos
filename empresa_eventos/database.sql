@@ -1,3 +1,8 @@
+-- ============================================================
+-- SCRIPT MYSQL DEFINITIVO Y ACTUALIZADO (imperium_eventos)
+-- Alineado al 100% con los campos de index.html y app.js
+-- ============================================================
+
 -- 1. CREACIÓN DE LA BASE DE DATOS
 CREATE DATABASE IF NOT EXISTS imperium_eventos;
 USE imperium_eventos;
@@ -26,38 +31,38 @@ CREATE TABLE IF NOT EXISTS clientes (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 4. TABLA DE RESERVAS Y PAGOS (Actualizada con pasarela)
+-- 4. TABLA DE RESERVAS Y PAGOS (Campos alineados con app.js)
 CREATE TABLE IF NOT EXISTS reservas (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    codigo_voucher VARCHAR(20) NOT NULL UNIQUE,
-    cliente_nombre VARCHAR(100) NOT NULL,
+    codigo_voucher VARCHAR(50) NOT NULL UNIQUE,
+    cliente_nombre VARCHAR(150) NOT NULL,
     cliente_telefono VARCHAR(20) NOT NULL,
-    cliente_email VARCHAR(100) NOT NULL,
-    tipo_evento VARCHAR(50) NOT NULL,
-    fecha_evento DATE NOT NULL,
-    animadores VARCHAR(50),
+    cliente_email VARCHAR(150),
+    tipo_evento VARCHAR(100),
+    fecha_evento DATE,
+    animadores VARCHAR(100),
     cantantes INT DEFAULT 0,
     seguridad INT DEFAULT 0,
-    plato_catering VARCHAR(100),
+    plato_catering VARCHAR(150),
     cantidad_platos INT DEFAULT 0,
-    bebidas_adicionales TEXT,
-    direccion_ubicacion TEXT NOT NULL,
-    coords_gps VARCHAR(255),
+    bebidas TEXT,
+    direccion_ubicacion TEXT,
+    coords_gps TEXT,
     monto_total DECIMAL(10,2) NOT NULL,
     monto_pagado DECIMAL(10,2) NOT NULL,
-    modalidad_pago VARCHAR(20) NOT NULL, -- '50%' o '100%'
-    metodo_pago VARCHAR(50) NOT NULL,    -- 'Yape / Plin' o 'Tarjeta'
-    detalle_pago VARCHAR(100),           -- N° Operación Yape o últimos 4 dígitos
+    modalidad_pago VARCHAR(50) NOT NULL,
+    metodo_pago VARCHAR(50) NOT NULL,
+    detalle_pago TEXT,
     estado_pago VARCHAR(50) DEFAULT 'ADELANTO PAGADO (50%)',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Registros de prueba alineados con el sistema
+-- Registros de prueba actualizados con la nueva estructura
 INSERT INTO reservas (
     codigo_voucher, cliente_nombre, cliente_telefono, cliente_email, 
     tipo_evento, fecha_evento, animadores, cantantes, seguridad, 
-    plato_catering, cantidad_platos, direccion_ubicacion, coords_gps, 
+    plato_catering, cantidad_platos, bebidas, direccion_ubicacion, coords_gps, 
     monto_total, monto_pagado, modalidad_pago, metodo_pago, detalle_pago, estado_pago
 ) VALUES 
-('IMP-849201', 'Juan Pérez', '987654321', 'juan.perez@gmail.com', 'Boda / Matrimonio', '2026-10-15', '1 Animador Principal', 1, 2, 'Chiriuchu Tradicional', 50, 'Av. El Sol 456, Cusco', 'https://maps.google.com/?q=-13.5171,-71.9786', 2200.00, 1100.00, '50%', 'Yape / Plin', 'N° Operación: 849201', 'ADELANTO PAGADO (50%)'),
-('IMP-302914', 'María Cárdenas', '951234567', 'maria.cardenas@outlook.com', '15 Años', '2026-11-02', '2 Animadores', 1, 2, 'Lechón al Horno', 80, 'Av. La Cultura 1230, Cusco', 'https://maps.google.com/?q=-13.5171,-71.9786', 3250.00, 3250.00, '100%', 'Tarjeta de Débito/Crédito', 'Tarjeta ****4557', 'PAGADO TOTAL (100%)');
+('IMP-849201', 'Juan Pérez', '987654321', 'juan.perez@gmail.com', 'Boda / Matrimonio', '2026-10-15', '1 Animador Principal', 1, 2, 'Chiriuchu Tradicional', 50, 'Gaseosas y Cervezas', 'Av. El Sol 456, Cusco', 'https://maps.google.com/?q=-13.5171,-71.9786', 2200.00, 1100.00, '50%', 'Yape / Plin', 'N° Operación: 849201', 'ADELANTO PAGADO (50%)'),
+('IMP-302914', 'María Cárdenas', '951234567', 'maria.cardenas@outlook.com', '15 Años', '2026-11-02', '2 Animadores', 1, 2, 'Lechón al Horno', 80, 'PAQUETE PROMOCIONAL IMPERIUM ALL-INCLUSIVE APLICADO (S/ 1,499.00)', 'Av. La Cultura 1230, Cusco', 'https://maps.google.com/?q=-13.5171,-71.9786', 3250.00, 3250.00, '100%', 'Tarjeta de Débito/Crédito', 'Tarjeta ****4557', 'PAGADO TOTAL (100%)');

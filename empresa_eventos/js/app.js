@@ -1,5 +1,5 @@
 // Número oficial del Encargado para recibir reservas por WhatsApp
-const TEL_ENCARGADO = "51987654321"; 
+const TEL_ENCARGADO = "51940775818"; 
 
 let map, marker;
 let reservaTemporal = null; 
@@ -19,12 +19,30 @@ document.addEventListener("DOMContentLoaded", function() {
 
         marker = L.marker([latInicial, lngInicial], {draggable: true}).addTo(map);
 
+        // Función para actualizar coordenadas GPS y autocompletar la Dirección Escrita
         function actualizarCoords(lat, lng) {
             const coordsInput = document.getElementById('coordsUbicacion');
             if (coordsInput) {
                 coordsInput.value = `https://maps.google.com/?q=${lat},${lng}`;
             }
+            actualizarDireccionPorCoordenadas(lat, lng);
         }
+
+        // Geocodificación Inversa (Convierte coordenadas en dirección física)
+        function actualizarDireccionPorCoordenadas(lat, lng) {
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.display_name) {
+                    const inputUbicacion = document.getElementById('direccionUbicacion') || document.getElementById('ubicacion');
+                    if (inputUbicacion) {
+                        inputUbicacion.value = data.display_name;
+                    }
+                }
+            })
+            .catch(err => console.error("Error al obtener dirección del mapa:", err));
+        }
+
         actualizarCoords(latInicial, lngInicial);
 
         marker.on('dragend', function(e) {
@@ -44,15 +62,15 @@ const detallesServicios = {
     'animador': {
         titulo: 'Animadores & Cantantes Profesionales',
         precio: 'S/ 250.00 / Cantante S/ 300.00',
-        imagen: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80',
-        descripcion: '<strong>Animadores Profesionales:</strong> Conductores capacitados.<br><strong>Cantantes:</strong> Cumbia, Folclor, Pop y Criollo.',
+        imagen: 'https://elbuho.pe/wp-content/uploads/2023/08/WhatsApp-Image-2023-08-15-at-13.29.03.jpeg',
+        descripcion: '<strong>Animadores Profesionales:</strong> Conductores capacitados.<br><strong>Cantantes:</strong> Cumbia, Folclor, Salsa, Chicha, Variado.',
         badge: 'Servicio Contratable'
     },
     'marco': {
         titulo: 'Marco Musical, Mariachis y Orquestas',
         precio: 'Desde S/ 500.00 / Hora de Show',
-        imagen: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80',
-        descripcion: 'Mariachis, conjunto de arpa y violín, o banda de viento.',
+        imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX4b-X3Wg6Nar2YxfOawAOKTrZf8KrzRG4lsjG32T0iQ&s',
+        descripcion: 'Teclado, timbales, conjunto de arpa y violín, o banda de viento.',
         badge: 'Música en Vivo'
     },
     'luces': {
@@ -65,7 +83,7 @@ const detallesServicios = {
     'seguridad': {
         titulo: 'Agentes de Seguridad Privada',
         precio: 'S/ 120.00 por agente (5 horas)',
-        imagen: 'https://images.unsplash.com/photo-1508873696983-2df515122519?auto=format&fit=crop&w=800&q=80',
+        imagen: 'https://servisegur.com.pe/wp-content/uploads/2018/11/seguridas-para-eventos-en-Lima.jpg',
         descripcion: 'Agentes uniformados para el control de la puerta e ingreso.',
         badge: 'Seguridad Privada'
     },
@@ -86,22 +104,22 @@ const detallesServicios = {
     'chiriuchu': {
         titulo: 'Chiriuchu Tradicional Cusqueño',
         precio: 'S/ 35.00 por plato / porción',
-        imagen: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
-        descripcion: 'Plato emblemático con cuy al horno, gallina, torreja, cecina y moraya.',
+        imagen: 'https://jameaperu.com/assets/images/chiriuchu_800x534.webp',
+        descripcion: 'Plato emblemático con cuy al horno, gallina, torreja, cecina, canchita.',
         badge: 'Plato Bandera'
     },
     'lechon': {
         titulo: 'Lechón al Horno Tradicional',
-        precio: 'S/ 30.00 por plato / porción',
-        imagen: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
-        descripcion: 'Lechón crujiente servido con tamal cusqueño y moraya.',
+        precio: 'S/ 35.00 por plato / porción',
+        imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqGVIdn-U5epJl3IpE6fgYB1EDqIet66mzmFUfFT2dFIqz15U8xUtNMWZq&s=10',
+        descripcion: 'Lechón crujiente servido con tamal cusqueño, pan oropesa y moraya.',
         badge: 'Recomendado Bodas'
     },
     'pollo': {
         titulo: 'Pollo al Horno con Tallarín',
-        precio: 'S/ 22.00 por plato / porción',
-        imagen: 'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=800&q=80',
-        descripcion: 'Presa de pollo al horno con tallarines y papa dorada.',
+        precio: 'S/ 25.00 por plato / porción',
+        imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrszVQ48ap4mFPAtUC_khW9cgwXdISs917TBJo1RMR3y1s5h9Kb7VPpHWD&s=10',
+        descripcion: 'Presa de pollo al horno con tallarines, Rocoto relleno y papa dorada.',
         badge: 'Económico'
     }
 };
@@ -124,9 +142,9 @@ function cerrarModal() {
 }
 
 function aplicarPromo() {
-    const bebidasInput = document.getElementById('bebidas');
+    const bebidasInput = document.getElementById('bebidasAdicionales') || document.getElementById('bebidas');
     if(bebidasInput) {
-        bebidasInput.value = "PAQUETE PROMOCIONAL IMPERIUM ALL-INCLUSIVE APLICADO (S/ 2,499.00)";
+        bebidasInput.value = "PAQUETE PROMOCIONAL IMPERIUM ALL-INCLUSIVE APLICADO (S/ 1,499.00)";
     }
 }
 
@@ -143,10 +161,13 @@ if (formEvento) {
         const cantPlatosVal = parseInt(document.getElementById('cantPlatos').value) || 0;
         const modalidad = document.getElementById('modalidadPagoSel').value;
 
+        const bebidasVal = (document.getElementById('bebidasAdicionales') || document.getElementById('bebidas'))?.value || "Ninguna";
+        const ubicacionVal = (document.getElementById('direccionUbicacion') || document.getElementById('ubicacion'))?.value || "No especificada";
+
         let costoAnimador = animadorTxt.includes("1 Animador") ? 250 : (animadorTxt.includes("2 Animadores") ? 450 : 0);
         let costoCantantes = cantantesVal * 300;
         let costoSeguridad = seguridadVal * 120;
-        let precioPlatoUnit = platoTxt.includes("Chiriuchu") ? 35 : (platoTxt.includes("Lechón") ? 30 : 22);
+        let precioPlatoUnit = platoTxt.includes("Chiriuchu") ? 35 : (platoTxt.includes("Lechón") ? 35 : 25);
         let costoCatering = cantPlatosVal * precioPlatoUnit;
 
         let totalCalculado = costoAnimador + costoCantantes + costoSeguridad + costoCatering + 200;
@@ -164,8 +185,8 @@ if (formEvento) {
             seguridad: seguridadVal,
             plato_catering: platoTxt,
             cantidad_platos: cantPlatosVal,
-            bebidas: document.getElementById('bebidas').value,
-            ubicacion: document.getElementById('ubicacion').value,
+            bebidas: bebidasVal,
+            ubicacion: ubicacionVal,
             coords_gps: document.getElementById('coordsUbicacion').value,
             totalCalculado: totalCalculado,
             montoPagar: montoPagar,
@@ -243,7 +264,36 @@ function finalizarReservaConPago(metodoPago, detallePago) {
     listaReservas.unshift(reservaFinal);
     localStorage.setItem('reservas_imperium', JSON.stringify(listaReservas));
 
-    // 2. Generar Voucher PDF (Descarga automática)
+    // 2. Guardar en Supabase (si el cliente de Supabase está presente)
+    if (window.supabase) {
+        window.supabase.from('reservas').insert([{
+            codigo_voucher: reservaFinal.voucher,
+            cliente_nombre: reservaFinal.nombre,
+            cliente_telefono: reservaFinal.telefono,
+            cliente_email: reservaFinal.email,
+            tipo_evento: reservaFinal.tipo_evento,
+            fecha_evento: reservaFinal.fecha_evento,
+            animadores: reservaFinal.animadores,
+            cantantes: reservaFinal.cantantes,
+            seguridad: reservaFinal.seguridad,
+            plato_catering: reservaFinal.plato_catering,
+            cantidad_platos: reservaFinal.cantidad_platos,
+            bebidas: reservaFinal.bebidas,
+            direccion_ubicacion: reservaFinal.ubicacion,
+            coords_gps: reservaFinal.coords_gps,
+            monto_total: reservaTemporal.totalCalculado,
+            monto_pagado: reservaTemporal.montoPagar,
+            modalidad_pago: reservaFinal.modalidad,
+            metodo_pago: reservaFinal.metodo_pago,
+            detalle_pago: reservaFinal.detalle_pago,
+            estado_pago: reservaFinal.estado
+        }]).then(({ data, error }) => {
+            if(error) console.error("Error guardando en Supabase:", error);
+            else console.log("Registrado con éxito en Supabase:", data);
+        });
+    }
+
+    // 3. Generar Voucher PDF (Descarga automática)
     if (window.jspdf) {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -264,40 +314,44 @@ function finalizarReservaConPago(metodoPago, detallePago) {
         doc.text(`Contacto: ${reservaFinal.telefono} | Correo: ${reservaFinal.email}`, 15, 58);
         doc.text(`Evento: ${reservaFinal.tipo_evento} - Fecha: ${reservaFinal.fecha_evento}`, 15, 66);
         doc.text(`Catering: ${reservaFinal.cantidad_platos} porciones de ${reservaFinal.plato_catering}`, 15, 74);
-        doc.text(`Ubicación: ${reservaFinal.ubicacion}`, 15, 82);
+        doc.text(`Bebidas / Adicionales: ${reservaFinal.bebidas}`, 15, 82);
+        doc.text(`Ubicación: ${reservaFinal.ubicacion}`, 15, 90);
 
         doc.setFillColor(245, 238, 241);
-        doc.rect(15, 90, 180, 30, 'F');
+        doc.rect(15, 98, 180, 32, 'F');
         doc.setFontSize(10);
         doc.setTextColor(107, 0, 26);
-        doc.text(`Monto Total del Evento: ${reservaFinal.monto_total}`, 20, 98);
-        doc.text(`MONTO PAGADO AHORA (${reservaFinal.modalidad}): ${reservaFinal.monto_pagado}`, 20, 106);
-        doc.text(`Medio de Pago: ${reservaFinal.metodo_pago} (${reservaFinal.detalle_pago})`, 20, 114);
+        doc.text(`Monto Total del Evento: ${reservaFinal.monto_total}`, 20, 106);
+        doc.text(`MONTO PAGADO AHORA (${reservaFinal.modalidad}): ${reservaFinal.monto_pagado}`, 20, 114);
+        doc.text(`Medio de Pago: ${reservaFinal.metodo_pago} (${reservaFinal.detalle_pago})`, 20, 122);
 
         doc.setFontSize(9);
         doc.setTextColor(0, 0, 0);
-        doc.text("Conserve este voucher. El comprobante ha sido registrado de forma oficial.", 15, 130);
+        doc.text("Conserve este voucher. El comprobante ha sido registrado de forma oficial.", 15, 138);
 
         doc.save(`Voucher_Pago_${reservaFinal.voucher}.pdf`);
     }
 
-    // 3. Notificación a WhatsApp del Encargado
+    // 4. Notificación a WhatsApp del Encargado
     let mensaje = `*¡CONFIRMACIÓN DE PAGO DE RESERVA!* 💳\n\n`;
     mensaje += `*Voucher N°:* ${reservaFinal.voucher}\n`;
     mensaje += `👤 *Cliente:* ${reservaFinal.nombre}\n`;
     mensaje += `📧 *Correo Cliente:* ${reservaFinal.email}\n`;
     mensaje += `📱 *Teléfono:* ${reservaFinal.telefono}\n`;
     mensaje += `🎈 *Evento:* ${reservaFinal.tipo_evento} (${reservaFinal.fecha_evento})\n`;
+    mensaje += `🍽️ *Catering:* ${reservaFinal.cantidad_platos} porciones de ${reservaFinal.plato_catering}\n`;
+    mensaje += `🍹 *Bebidas/Adicionales:* ${reservaFinal.bebidas}\n`;
     mensaje += `💰 *Costo Total:* ${reservaFinal.monto_total}\n`;
     mensaje += `✅ *MONTO DEPOSITADO:* ${reservaFinal.monto_pagado}\n`;
     mensaje += `💳 *Método de Pago:* ${reservaFinal.metodo_pago}\n`;
     mensaje += `🔢 *Detalle/Transacción:* ${reservaFinal.detalle_pago}\n`;
     mensaje += `📌 *Estado:* ${reservaFinal.estado}\n`;
-    mensaje += `📍 *Ubicación GPS:* ${reservaFinal.coords_gps}\n`;
+    mensaje += `📍 *Ubicación:* ${reservaFinal.ubicacion}\n`;
+    mensaje += `🗺️ *Ubicación GPS:* ${reservaFinal.coords_gps}\n`;
 
     cerrarPasarela();
 
-    // 4. Muestra la ventana de éxito y abre WhatsApp
+    // 5. Muestra la ventana de éxito y abre WhatsApp
     document.getElementById('voucherCodigoTxt').innerText = reservaFinal.voucher;
     const correoElem = document.getElementById('correoDestinoTxt');
     if (correoElem) correoElem.innerText = reservaFinal.email;
